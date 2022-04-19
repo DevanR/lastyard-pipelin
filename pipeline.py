@@ -18,10 +18,9 @@ def main(product_data, include_tags, exclude_tags):
 
     # Filter for exclude_tags
     if exclude_tags:
-        for product in product_data:
-            if all(tag not in product["tags"] for tag in exclude_tags):
-                selected_products.append(product)
-
+        for product in selected_products:
+            if any(tag in product["tags"] for tag in exclude_tags):
+                selected_products.remove(product)
 
     # Package result
     result = {}

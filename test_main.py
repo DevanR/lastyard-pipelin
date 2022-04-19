@@ -40,11 +40,21 @@ def test_main_multiple_include_arg_additional_products():
 
 
 def test_main_single_exclude_arg():
-    test_items = {
-        'T-Shirt': ["A21312"],
-        'Pants': ["A21455", "A21317"],
-        'Jacket': ["A21501", "A21502"]
-    }
+    test_items = {}
     result_items = main(product_data, [], ["large"])
     assert test_items == result_items
 
+
+def test_main_multiple_exclude_arg():
+    test_items = {}
+    result_items = main(product_data, [], ["medium", "large"])
+    assert test_items == result_items
+
+
+def test_main_include_exclude_arg():
+    test_items = {
+        'T-Shirt': ["A21312"],
+        'Pants': ["A21455"]
+    }
+    result_items = main(product_data, ["red", "green"], ["large"])
+    assert test_items == result_items
