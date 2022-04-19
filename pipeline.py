@@ -16,6 +16,13 @@ def main(product_data, include_tags, exclude_tags):
             if any(tag in product["tags"] for tag in include_tags):
                 selected_products.append(product)
 
+    # Filter for exclude_tags
+    if exclude_tags:
+        for product in product_data:
+            if all(tag not in product["tags"] for tag in exclude_tags):
+                selected_products.append(product)
+
+
     # Package result
     result = {}
     for product in selected_products:
