@@ -30,7 +30,12 @@ def main(product_data, include_tags, exclude_tags):
         else:
             result[product["name"]] = [product["code"]]
 
-    return result
+    output = []
+    for key in result.keys():
+        match = PreferenceMatch(product_name=key, product_codes=result[key])
+        output.append(match)
+
+    return output
 
 
 if __name__ == "__main__":
