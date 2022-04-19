@@ -8,33 +8,64 @@ PreferenceMatch = namedtuple("PreferenceMatch", ["product_name", "product_codes"
 def main(product_data, include_tags, exclude_tags):
     """The implementation of the pipeline test."""
 
-#    # VERSION 1: Iterative selection and filtering
-#    selected_products = []
-#
-#    # Filter for include_tags
-#    if include_tags:
-#        for product in product_data:
-#            if any(tag in product["tags"] for tag in include_tags):
-#                selected_products.append(product)
-#
-#    # Filter for exclude_tags
-#    if exclude_tags:
-#        for product in selected_products:
-#            if any(tag in product["tags"] for tag in exclude_tags):
-#                selected_products.remove(product)
+    # VERSION 1: Iterative selection and filtering
+    #    selected_products = []
+    #
+    #    # Filter for include_tags
+    #    if include_tags:
+    #        for product in product_data:
+    #            if any(tag in product["tags"] for tag in include_tags):
+    #                selected_products.append(product)
+    #
+    #    # Filter for exclude_tags
+    #    if exclude_tags:
+    #        for product in selected_products:
+    #            if any(tag in product["tags"] for tag in exclude_tags):
+    #                selected_products.remove(product)
+    # -------------------------------------------------------------------
 
     # VERSION 2: Lazy generator expression for larger JSON files
-    selected_products = (product for product in product_data if
-                         any(tag in product["tags"] for tag in include_tags) and all(
-                             tag not in product["tags"] for tag in exclude_tags))
+    #    selected_products = (product for product in product_data if
+    #                         any(tag in product["tags"] for tag in include_tags) and all(
+    #                             tag not in product["tags"] for tag in exclude_tags))
+    # -------------------------------------------------------------------
+
+    # VERSION 3: Search optimisation with a dictionary
+
+    # Create tag dict
+    product_dict = {}
+    for product in product_data:
+        for tag in product["tags"]:
+            if tag not in product_dict.keys():
+                product_dict[tag] = []
+
+            product_dict[tag].append((product["name"], product["code"]))
+
+    # Get included products
+    included_products = []
+    for tag in include_tags:
+        if tag in product_dict.keys():
+            for prod in product_dict[tag]:
+                included_products.append(prod)
+
+    # Get excluded products
+    excluded_products = []
+    for tag in exclude_tags:
+        if tag in product_dict.keys():
+            for prod in product_dict[tag]:
+                excluded_products.append(prod)
+
+    # Get included - excluded products
+    selected_products = [product for product in included_products if product not in excluded_products]
 
     # Package result
     result = {}
     for product in selected_products:
-        if product["name"] in result.keys():
-            result[product["name"]].append(product["code"])
+        if product[0] not in result.keys():
+            result[product[0]] = [product[1]]
         else:
-            result[product["name"]] = [product["code"]]
+            if product[1] not in result[product[0]]:
+                result[product[0]].append(product[1])
 
     output = []
     for key in result.keys():
