@@ -8,8 +8,16 @@ PreferenceMatch = namedtuple("PreferenceMatch", ["product_name", "product_codes"
 def main(product_data, include_tags, exclude_tags):
     """The implementation of the pipeline test."""
 
-    filtered_items = [
-    ]
+    filtered_items = {}
+
+    # Filter for include_tags
+    if include_tags:
+        for product in product_data:
+            if all(tag in product["tags"] for tag in include_tags):
+                if product["name"] in filtered_items.keys():
+                    filtered_items[product["name"]].append(product["code"])
+                else:
+                    filtered_items[product["name"]] = [product["code"]]
 
     return filtered_items
 
@@ -18,6 +26,7 @@ if __name__ == "__main__":
 
     def parse_tags(tags):
         return [tag for tag in tags.split(",") if tag]
+
 
     parser = argparse.ArgumentParser(
         description="Extracts unique product names matching given tags."
