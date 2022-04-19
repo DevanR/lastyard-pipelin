@@ -27,3 +27,13 @@ def test_main_multiple_include_arg():
     }
     result_items = main(product_data, ["red", "black"], [])
     assert test_items == result_items
+
+
+def test_main_multiple_include_arg_additional_products():
+    test_items = {
+        'T-Shirt': ["A21312"],
+        'Pants': ["A21455"],
+        'Socks': ["A21412"]
+    }
+    result_items = main(product_data, ["green"], [])
+    assert test_items == result_items
