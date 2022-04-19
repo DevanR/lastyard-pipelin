@@ -8,10 +8,7 @@ PreferenceMatch = namedtuple("PreferenceMatch", ["product_name", "product_codes"
 def main(product_data, include_tags, exclude_tags):
     """The implementation of the pipeline test."""
 
-    import types
     filtered_items = [
-        types.SimpleNamespace(product_name="test_name_1", product_codes=["100", "200"]),
-        types.SimpleNamespace(product_name="test_name_2", product_codes=["300", "400"])
     ]
 
     return filtered_items
