@@ -8,19 +8,25 @@ PreferenceMatch = namedtuple("PreferenceMatch", ["product_name", "product_codes"
 def main(product_data, include_tags, exclude_tags):
     """The implementation of the pipeline test."""
 
-    selected_products = []
+#    # VERSION 1: Iterative selection and filtering
+#    selected_products = []
+#
+#    # Filter for include_tags
+#    if include_tags:
+#        for product in product_data:
+#            if any(tag in product["tags"] for tag in include_tags):
+#                selected_products.append(product)
+#
+#    # Filter for exclude_tags
+#    if exclude_tags:
+#        for product in selected_products:
+#            if any(tag in product["tags"] for tag in exclude_tags):
+#                selected_products.remove(product)
 
-    # Filter for include_tags
-    if include_tags:
-        for product in product_data:
-            if any(tag in product["tags"] for tag in include_tags):
-                selected_products.append(product)
-
-    # Filter for exclude_tags
-    if exclude_tags:
-        for product in selected_products:
-            if any(tag in product["tags"] for tag in exclude_tags):
-                selected_products.remove(product)
+    # VERSION 2: Lazy generator expression for larger JSON files
+    selected_products = (product for product in product_data if
+                         any(tag in product["tags"] for tag in include_tags) and all(
+                             tag not in product["tags"] for tag in exclude_tags))
 
     # Package result
     result = {}
