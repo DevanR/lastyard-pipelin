@@ -13,7 +13,7 @@ def main(product_data, include_tags, exclude_tags):
     # Filter for include_tags
     if include_tags:
         for product in product_data:
-            if all(tag in product["tags"] for tag in include_tags):
+            if any(tag in product["tags"] for tag in include_tags):
                 if product["name"] in filtered_items.keys():
                     filtered_items[product["name"]].append(product["code"])
                 else:
