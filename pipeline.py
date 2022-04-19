@@ -8,18 +8,23 @@ PreferenceMatch = namedtuple("PreferenceMatch", ["product_name", "product_codes"
 def main(product_data, include_tags, exclude_tags):
     """The implementation of the pipeline test."""
 
-    filtered_items = {}
+    selected_products = []
 
     # Filter for include_tags
     if include_tags:
         for product in product_data:
             if any(tag in product["tags"] for tag in include_tags):
-                if product["name"] in filtered_items.keys():
-                    filtered_items[product["name"]].append(product["code"])
-                else:
-                    filtered_items[product["name"]] = [product["code"]]
+                selected_products.append(product)
 
-    return filtered_items
+    # Package result
+    result = {}
+    for product in selected_products:
+        if product["name"] in result.keys():
+            result[product["name"]].append(product["code"])
+        else:
+            result[product["name"]] = [product["code"]]
+
+    return result
 
 
 if __name__ == "__main__":
